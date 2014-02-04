@@ -7,7 +7,7 @@ public class Details
 {
 
     public var version:String;
-
+    public var error:ErrorDetails;
 
 }
 }

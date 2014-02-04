@@ -8,9 +8,6 @@ public class RaygunRequest
 
     public var occurredOn:String
 
-
-    public function RaygunRequest()
-    {
-    }
+    public var details:Details;
 }
 }

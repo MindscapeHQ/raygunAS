@@ -3,6 +3,12 @@
  */
 package com.mands.raygunas
 {
+import com.brooksandrus.utils.ISO8601Util;
+import com.mands.raygunas.raygunrequest.Details;
+import com.mands.raygunas.raygunrequest.ErrorDetails;
+import com.mands.raygunas.raygunrequest.RaygunRequest;
+import com.mands.raygunas.raygunrequest.StackLine;
+
 import flash.events.Event;
 import flash.events.UncaughtErrorEvent;
 import flash.system.Capabilities;
@@ -144,6 +150,47 @@ public class RaygunTestCase
         }
         Async.handleEvent(this, raygunAs, RaygunAs.DEVICE_DATA_READY, check, 1000);
         raygunAs.getOSVersion(os);
+    }
+
+
+    [Test]
+    public function test_stringify_to_json():void
+    {
+        var stackLine1:StackLine = new StackLine();
+        stackLine1.className="Class1";
+        stackLine1.methodName="method()";
+        stackLine1.fileName="Class1.as";
+        stackLine1.lineNumber=8;
+
+        var stackLine2:StackLine = new StackLine();
+        stackLine2.className="Class2";
+        stackLine2.methodName="method2()";
+        stackLine2.fileName="Class2.as";
+        stackLine2.lineNumber=8;
+
+        var error:ErrorDetails = new ErrorDetails();
+        error.innerError="sakdaslsd";
+        error.className="Class3";
+        error.message="purposely built error";
+        error.stackTrace = new Array();
+        error.stackTrace.push(stackLine1);
+        error.stackTrace.push(stackLine2);
+
+        var details:Details=new Details();
+        details.error=error;
+        details.version="1.01";
+
+        var request = new RaygunRequest();
+
+        //format date
+        var dateUtil:ISO8601Util = new ISO8601Util();
+        request.occurredOn = dateUtil.formatExtendedDateTime(new Date());
+        request.details=details;
+
+        var JSONString:String = JSON.stringify(request);
+
+        trace(JSONString);
+
     }
 
 
