@@ -8,7 +8,6 @@ import com.mands.raygunas.raygunrequest.Environment;
 import com.mands.raygunas.raygunrequest.ErrorDetails;
 import com.mands.raygunas.raygunrequest.StackLine;
 
-import flash.display.Stage;
 import flash.events.Event;
 import org.flexunit.asserts.assertEquals;
 import org.flexunit.asserts.assertNotNull;
