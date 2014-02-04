@@ -3,32 +3,16 @@
  */
 package com.mands.raygunas
 {
-import com.brooksandrus.utils.ISO8601Util;
-import com.mands.raygunas.raygunrequest.Details;
+
+import com.mands.raygunas.raygunrequest.Environment;
 import com.mands.raygunas.raygunrequest.ErrorDetails;
-import com.mands.raygunas.raygunrequest.RaygunRequest;
 import com.mands.raygunas.raygunrequest.StackLine;
 
+import flash.display.Stage;
 import flash.events.Event;
-import flash.events.UncaughtErrorEvent;
-import flash.system.Capabilities;
-
-import mockolate.mock;
-
-import mockolate.nice;
-
-import mockolate.prepare;
-import mockolate.strict;
-import mockolate.stub;
-import mockolate.verify;
-
-import org.flexunit.assertThat;
 import org.flexunit.asserts.assertEquals;
 import org.flexunit.asserts.assertNotNull;
-import org.flexunit.asserts.assertNull;
-
 import org.flexunit.async.Async;
-import org.hamcrest.object.nullValue;
 
 public class RaygunTestCase
 {
@@ -110,29 +94,19 @@ public class RaygunTestCase
     private var _osWithIOS:String = "iPhone OS 7.1 iPhone4,1";
 
     [Test(async, timeout=1000)]
-    public function test_getDeviceModel_should_return_iPhone_for_iOS_device():void
+    public function test_getDeviceData_should_return_iPhone_and_iOS_version_for_iOS_device():void
     {
+        var environment:Environment = new Environment(null);;
         var check:Function = function(e:Event,... args):void
         {
-            assertEquals("iPhone4,1", DeviceData.deviceModel);
-            trace("DEVICE MODEL", DeviceData.deviceModel);
+            assertEquals("iPhone4,1", environment.deviceName);
+            assertEquals("iPhone OS 7.1", environment.osVersion);
         }
-        Async.handleEvent(this, _raygunAs, RaygunAs.DEVICE_DATA_READY, check, 1000);
-        _raygunAs.getDeviceModel(_osWithIOS);
+        Async.handleEvent(this, environment, Environment.DEVICE_DATA_READY, check, 1000);
+
+        environment.getDeviceData(_osWithIOS);
     }
 
-    [Test(async, timeout=1000)]
-    public function test_getOSVersion_should_return_iPhone_OS_for_iOS_device():void
-    {
-        var os:String = "iPhone OS 7.1 iPhone4,1";
-        var check:Function = function(e:Event,... args):void
-        {
-            assertEquals("iPhone OS 7.1", DeviceData.osVersion);
-            trace("OS Version", DeviceData.osVersion);
-        }
-        Async.handleEvent(this, _raygunAs, RaygunAs.DEVICE_DATA_READY, check, 1000);
-        _raygunAs.getOSVersion(_osWithIOS);
-    }
 
     [Test]
     public function test_parseStackTrace_should_return_array_of_StackLine_objects():void
@@ -178,6 +152,8 @@ public class RaygunTestCase
         var errorClass:String = ErrorDetails.parseErrorClass(_fullStackTrace);
         assertEquals("ArgumentError", errorClass);
     }
+
+
 
 
     //TODO: not a real test. just experimentation. delete later

@@ -17,7 +17,6 @@ import nl.funkymonkey.android.deviceinfo.NativeDevicePropertiesData;
 
 public class RaygunAs implements IEventDispatcher
 {
-    public static const DEVICE_DATA_READY:String = "DeviceDataReady" ;
 
     private var dispatcher:EventDispatcher;
 
@@ -54,57 +53,7 @@ public class RaygunAs implements IEventDispatcher
 
 
 
-    public function getDeviceModel(os:String)
-    {
-        var deviceLineNumber:int = os.lastIndexOf("iPhone");
-        if(deviceLineNumber < 0) deviceLineNumber = os.lastIndexOf("iPad");
 
-        if(deviceLineNumber >= 0){
-
-            DeviceData.deviceModel = os.substring(deviceLineNumber);
-            dispatchEvent(new Event(DEVICE_DATA_READY ));
-        }
-        else{
-            //check for Android
-            deviceLineNumber = os.indexOf("Linux");
-            if(deviceLineNumber >= 0)
-            {
-                var deviceInfo : NativeDeviceInfo = new NativeDeviceInfo();
-                deviceInfo.addEventListener(NativeDeviceInfoEvent.PROPERTIES_PARSED, handleDevicePropertiesParsed);
-                deviceInfo.setDebug(false);
-                deviceInfo.parse();
-            }
-        }
-    }
-
-    public function getOSVersion( os:String ):void
-    {
-        var deviceLineNumber:int = os.lastIndexOf("iPhone");
-        if(deviceLineNumber < 0) deviceLineNumber = os.lastIndexOf("iPad");
-
-        if(deviceLineNumber >= 0){
-
-            DeviceData.osVersion = os.substring(0, deviceLineNumber -1);
-            dispatchEvent(new Event(DEVICE_DATA_READY ));
-        }
-        else{
-            //check for Android
-            deviceLineNumber = os.indexOf("Linux");
-            if(deviceLineNumber >= 0)
-            {
-                var deviceInfo : NativeDeviceInfo = new NativeDeviceInfo();
-                deviceInfo.addEventListener(NativeDeviceInfoEvent.PROPERTIES_PARSED, handleDevicePropertiesParsed);
-                deviceInfo.setDebug(false);
-                deviceInfo.parse();
-            }
-        }
-    }
-
-    private function handleDevicePropertiesParsed( event:NativeDeviceInfoEvent ):void
-    {
-        DeviceData.deviceModel = NativeDevicePropertiesData(NativeDeviceProperties.PRODUCT_MODEL ).value;
-        DeviceData.osVersion = NativeDevicePropertiesData(NativeDeviceProperties.OS_VERSION ).value;
-    }
 
 
 }

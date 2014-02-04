@@ -3,9 +3,6 @@
  */
 package com.mands.raygunas.raygunrequest
 {
-import com.mands.raygunas.RaygunAs;
-
-import flash.events.UncaughtErrorEvent;
 
 public class ErrorDetails
 {
@@ -16,12 +13,9 @@ public class ErrorDetails
     public function ErrorDetails( error:Error)
     {
         message=error.message;
-        var raygunAs:RaygunAs = new RaygunAs();
         stackTrace= parseStackTrace(error.getStackTrace());
         className = parseErrorClass(error.getStackTrace());
-
     }
-
 
     public static function parseErrorClass( stackTrace:String ):String
     {
