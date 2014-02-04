@@ -13,11 +13,14 @@ import flash.events.Event;
 import flash.events.UncaughtErrorEvent;
 import flash.system.Capabilities;
 
+import mockolate.mock;
+
 import mockolate.nice;
 
 import mockolate.prepare;
 import mockolate.strict;
 import mockolate.stub;
+import mockolate.verify;
 
 import org.flexunit.assertThat;
 import org.flexunit.asserts.assertEquals;
@@ -53,13 +56,6 @@ public class RaygunTestCase
                 Event.COMPLETE);
 
         _raygunAs = new RaygunAs();
-    }
-
-    [Test]
-    public function test_empty_mock_error_should_have_no_message():void
-    {
-        var error:Error = nice(Error);
-        assertThat(error.message, nullValue());
     }
 
     [Test]
@@ -167,50 +163,65 @@ public class RaygunTestCase
         assertEquals("process()", stackLine.methodName);
         assertEquals(274, stackLine.lineNumber);
         assertEquals("C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as", stackLine.fileName);
+    }
 
+    [Test]
+    public function test_constructErrorDetails_from_errorEvent_should_create_error_instance():void
+    {
+        var error:Error = new TypeError("Error #1009: Cannot access a property or method of a null object reference.");
+        var errorDetails:ErrorDetails = new ErrorDetails(error);
+        assertEquals(22, errorDetails.stackTrace.length);
+        assertEquals("Error #1009: Cannot access a property or method of a null object reference.", errorDetails.message);
+        assertEquals("TypeError", errorDetails.className);
+
+    }
+
+    [Test]
+    public function test_parseErrorClass_should_create_error_class_name_from_stack_trace():void
+    {
+        var errorClass:String = ErrorDetails.parseErrorClass(_fullStackTrace);
+        assertEquals("ArgumentError", errorClass);
     }
 
 
     //TODO: not a real test. just experimentation. delete later
-    [Test]
-    public function test_stringify_to_json():void
-    {
-        var stackLine1:StackLine = new StackLine();
-        stackLine1.className="Class1";
-        stackLine1.methodName="method()";
-        stackLine1.fileName="Class1.as";
-        stackLine1.lineNumber=8;
-
-        var stackLine2:StackLine = new StackLine();
-        stackLine2.className="Class2";
-        stackLine2.methodName="method2()";
-        stackLine2.fileName="Class2.as";
-        stackLine2.lineNumber=8;
-
-        var error:ErrorDetails = new ErrorDetails();
-        error.innerError="sakdaslsd";
-        error.className="Class3";
-        error.message="purposely built error";
-        error.stackTrace = new Array();
-        error.stackTrace.push(stackLine1);
-        error.stackTrace.push(stackLine2);
-
-        var details:Details=new Details();
-        details.error=error;
-        details.version="1.01";
-
-        var request = new RaygunRequest();
-
-        //format date
-        var dateUtil:ISO8601Util = new ISO8601Util();
-        request.occurredOn = dateUtil.formatExtendedDateTime(new Date());
-        request.details=details;
-
-        var JSONString:String = JSON.stringify(request);
-
-        trace(JSONString);
-
-    }
+//    [Test]
+//    public function test_stringify_to_json():void
+//    {
+//        var stackLine1:StackLine = new StackLine();
+//        stackLine1.className="Class1";
+//        stackLine1.methodName="method()";
+//        stackLine1.fileName="Class1.as";
+//        stackLine1.lineNumber=8;
+//
+//        var stackLine2:StackLine = new StackLine();
+//        stackLine2.className="Class2";
+//        stackLine2.methodName="method2()";
+//        stackLine2.fileName="Class2.as";
+//        stackLine2.lineNumber=8;
+//
+//        var error:ErrorDetails = new ErrorDetails( new UncaughtErrorEvent() );
+//        error.message="purposely built error";
+//        error.stackTrace = new Array();
+//        error.stackTrace.push(stackLine1);
+//        error.stackTrace.push(stackLine2);
+//
+//        var details:Details=new Details();
+//        details.error=error;
+//        details.version="1.01";
+//
+//        var request = new RaygunRequest();
+//
+//        //format date
+//        var dateUtil:ISO8601Util = new ISO8601Util();
+//        request.occurredOn = dateUtil.formatExtendedDateTime(new Date());
+//        request.details=details;
+//
+//        var JSONString:String = JSON.stringify(request);
+//
+//        trace(JSONString);
+//
+//    }
 
 
 }
