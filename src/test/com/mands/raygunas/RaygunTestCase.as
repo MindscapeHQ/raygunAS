@@ -64,22 +64,22 @@ public class RaygunTestCase
 
 
         var exceptionLine:String = "at com.xtdstudios.DMT.atlas::AtlasGenerator/process()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:274]";
-        var number:String = raygunAs.getFileLineNumber(exceptionLine);
+        var number:int = raygunAs.getFileLineNumber(exceptionLine);
         assertEquals("274", number);
 
         exceptionLine = "at com.xtdstudios.common.threads::BasePseudoThread/onTimer()[C:\Users\gil\Adobe Flash Builder 4.7\XTDCommon\src\com\xtdstudios\common\threads\BasePseudoThread.as:54]";
         number = raygunAs.getFileLineNumber(exceptionLine);
-        assertEquals("54", number);
+        assertEquals(54, number);
 
     }
 
     [Test]
-    public function test_getFileLineNumber_should_return_null_when_there_is_no_line_number():void
+    public function test_getFileLineNumber_should_return_minus_1_when_there_is_no_line_number():void
     {
 
         var exceptionLine:String = "at flash.utils::Timer/_timerDispatch()";
-        var number:String = raygunAs.getFileLineNumber(exceptionLine);
-        assertNull(number);
+        var number:int = raygunAs.getFileLineNumber(exceptionLine);
+        assertEquals(-1, number);
     }
 
     [Test]
@@ -152,7 +152,51 @@ public class RaygunTestCase
         raygunAs.getOSVersion(os);
     }
 
+    [Test]
+    public function test_parseStackTrace_should_return_array_of_StackLine_objects():void
+    {
+        var stackTrace:String = "ArgumentError: Error #2015: Invalid BitmapData." +
+                "\nat flash.display::BitmapData/ctor()"+
+                "\nat flash.display::BitmapData()" +
+                "\nat com.xtdstudios.DMT.atlas::AtlasGenerator/generateBitmapData()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:159]" +
+                "\nat com.xtdstudios.DMT.atlas::AtlasGenerator/copyBitmaps()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:240]" +
+                "\nat com.xtdstudios.DMT.atlas::AtlasGenerator/process()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:274]" +
+                "\nat com.xtdstudios.common.threads::RunnablesList/process()[C:\Users\gil\Adobe Flash Builder 4.7\XTDCommon\src\com\xtdstudios\common\threads\RunnablesList.as:63]" +
+                "\nat com.xtdstudios.common.threads::BasePseudoThread/onTimer()[C:\Users\gil\Adobe Flash Builder 4.7\XTDCommon\src\com\xtdstudios\common\threads\BasePseudoThread.as:54]" +
+                "\nat flash.utils::Timer/_timerDispatch()" +
+                "\nat flash.utils::Timer/tick()";
 
+        var stackTraceArray:Array = raygunAs.parseStackTrace(stackTrace);
+        assertEquals(9,stackTraceArray.length);
+
+    }
+
+    [Test]
+    public function test_parseStackLine_should_return_a_StackLine_object_with_no_filename_and_lineNumber_when_stackTrace_line_doesnt_have_it():void
+    {
+        var stackTraceLine = "at flash.display::BitmapData/ctor()";
+        var stackLine = raygunAs.parseStackLine(stackTraceLine);
+
+        assertEquals("flash.display::BitmapData", stackLine.className);
+        assertEquals("ctor()", stackLine.methodName);
+        assertEquals(-1, stackLine.lineNumber);
+        assertEquals("", stackLine.fileName);
+    }
+
+    [Test]
+    public function test_parseStackLine_should_return_a_StackLine_object():void
+    {
+        var stackTraceLine = "at com.xtdstudios.DMT.atlas::AtlasGenerator/generateBitmapData()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:159]";
+        var stackLine = raygunAs.parseStackLine(stackTraceLine);
+        assertEquals("com.xtdstudios.DMT.atlas::AtlasGenerator", stackLine.className);
+        assertEquals("generateBitmapData()", stackLine.methodName);
+        assertEquals(159, stackLine.lineNumber);
+        assertEquals("C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as", stackLine.fileName);
+
+    }
+
+
+    //TODO: not a real test. just experimentation. delete later
     [Test]
     public function test_stringify_to_json():void
     {

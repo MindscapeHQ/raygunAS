@@ -3,6 +3,8 @@
  */
 package com.mands.raygunas
 {
+import com.mands.raygunas.raygunrequest.StackLine;
+
 import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.IEventDispatcher;
@@ -50,13 +52,16 @@ public class RaygunAs implements IEventDispatcher
         return dispatcher.willTrigger(type);
     }
 
-    public function getFileLineNumber(exceptionLine:String):String
+    public function getFileLineNumber(exceptionLine:String):int
     {
         var numberIndex = exceptionLine.indexOf(".as:");
-        if(numberIndex <= 0){
-            return null;
+        if(numberIndex <= 0)
+        {
+            return -1;
         }
-        else  return exceptionLine.slice(numberIndex+4, exceptionLine.length-1);
+        else  {
+            return parseInt(exceptionLine.slice(numberIndex+4, exceptionLine.length-1 ));
+        }
         }
 
     public function getDeviceModel(os:String)
@@ -148,5 +153,30 @@ public class RaygunAs implements IEventDispatcher
         return exceptionLine.slice(methodNameBeginIndex, methodNameEndIndex+2);
     }
 
+    public function parseStackTrace( stackTrace:String ):Array
+    {
+        var stackTraceLines:Array = stackTrace.split("\n");
+        var stackLines:Array = new Array();
+
+        var indexOfAt=0;
+
+        for(var i:int=0; i<stackTraceLines.length; i++){
+            if(stackTraceLines[i].indexOf("at ") >= 0)
+            {
+                stackLines.push(stackTraceLines.parseStackLine);
+            }
+        }
+        return stackLines;
+    }
+
+    public function parseStackLine( stackTraceLine:String ):StackLine
+    {
+        var stackLine = new StackLine();
+        stackLine.className = getClassName(stackTraceLine);
+        stackLine.fileName = getFileName(stackTraceLine);
+        stackLine.lineNumber = getFileLineNumber(stackTraceLine);
+        stackLine.methodName = getMethodName(stackTraceLine);
+        return stackLine;
+    }
 }
 }
