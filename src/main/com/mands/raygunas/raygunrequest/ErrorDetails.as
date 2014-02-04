@@ -17,7 +17,7 @@ public class ErrorDetails
     {
         message=error.message;
         var raygunAs:RaygunAs = new RaygunAs();
-        stackTrace= raygunAs.parseStackTrace(error.getStackTrace());
+        stackTrace= parseStackTrace(error.getStackTrace());
         className = parseErrorClass(error.getStackTrace());
 
     }
@@ -27,6 +27,22 @@ public class ErrorDetails
     {
         var errorClass:String = stackTrace.slice(0, stackTrace.indexOf(":"));
         return errorClass;
+    }
+
+    public static function parseStackTrace( stackTrace:String ):Array
+    {
+        var stackTraceLines:Array = stackTrace.split("\n");
+        var stackLines:Array = new Array();
+
+        var indexOfAt=0;
+
+        for(var i:int=0; i<stackTraceLines.length; i++){
+            if(stackTraceLines[i].indexOf("at ") >= 0)
+            {
+                stackLines.push(stackTraceLines.parseStackLine);
+            }
+        }
+        return stackLines;
     }
 }
 }

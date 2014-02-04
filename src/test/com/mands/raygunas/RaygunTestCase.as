@@ -24,6 +24,7 @@ import mockolate.verify;
 
 import org.flexunit.assertThat;
 import org.flexunit.asserts.assertEquals;
+import org.flexunit.asserts.assertNotNull;
 import org.flexunit.asserts.assertNull;
 
 import org.flexunit.async.Async;
@@ -51,62 +52,58 @@ public class RaygunTestCase
     [Before(async, timeout=5000)]
     public function prepareMockolates():void
     {
-        Async.proceedOnEvent(this,
-                prepare(UncaughtErrorEvent, Error),
-                Event.COMPLETE);
-
         _raygunAs = new RaygunAs();
     }
 
     [Test]
     public function test_getFileLineNumber_should_return_line_number_from_stacktrace():void
     {
-        var number:int = _raygunAs.getFileLineNumber(_stackTraceLineWithFileName);
+        var number:int = StackLine.getFileLineNumber(_stackTraceLineWithFileName);
         assertEquals(274, number);
     }
 
     [Test]
     public function test_getFileLineNumber_should_return_minus_1_when_there_is_no_line_number():void
     {
-        var number:int = _raygunAs.getFileLineNumber(_stackTraceLineWithoutFileName);
+        var number:int = StackLine.getFileLineNumber(_stackTraceLineWithoutFileName);
         assertEquals(-1, number);
     }
 
     [Test]
     public function test_getClassName_should_return_a_class_name_from_stacktrace():void
     {
-        var className:String = _raygunAs.getClassName(_stackTraceLineWithFileName);
+        var className:String = StackLine.getClassName(_stackTraceLineWithFileName);
         assertEquals("com.xtdstudios.DMT.atlas::AtlasGenerator", className);
 
-        className = _raygunAs.getClassName(_stackTraceLineWithConstructorMethod);
+        className = StackLine.getClassName(_stackTraceLineWithConstructorMethod);
         assertEquals("flash.display::BitmapData", className);
     }
 
     [Test]
     public function test_getFileName_should_return_a_file_name_from_stacktrace():void
     {
-        var fileName:String = _raygunAs.getFileName(_stackTraceLineWithFileName);
+        var fileName:String = StackLine.getFileName(_stackTraceLineWithFileName);
         assertEquals("C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as", fileName);
     }
 
     [Test]
     public function test_getFileName_should_return_an_empty_string_if_there_is_no_file_name_in_stacktrace():void
     {
-        var fileName:String = _raygunAs.getFileName(_stackTraceLineWithoutFileName);
+        var fileName:String = StackLine.getFileName(_stackTraceLineWithoutFileName);
         assertEquals("", fileName);
     }
 
     [Test]
     public function test_getMethodName_should_return_a_method_name_from_stacktrace():void
     {
-        var methodName:String = _raygunAs.getMethodName(_stackTraceLineWithFileName);
+        var methodName:String = StackLine.getMethodName(_stackTraceLineWithFileName);
         assertEquals("process()", methodName);
     }
 
     [Test]
     public function test_getMethodName_should_return_constructor_name_from_stacktrace_when_method_is_a_constructor():void
     {
-        var methodName:String = _raygunAs.getMethodName(_stackTraceLineWithConstructorMethod);
+        var methodName:String = StackLine.getMethodName(_stackTraceLineWithConstructorMethod);
         assertEquals("BitmapData()", methodName);
     }
 
@@ -140,14 +137,14 @@ public class RaygunTestCase
     [Test]
     public function test_parseStackTrace_should_return_array_of_StackLine_objects():void
     {
-        var stackTraceArray:Array = _raygunAs.parseStackTrace(_fullStackTrace);
+        var stackTraceArray:Array = ErrorDetails.parseStackTrace(_fullStackTrace);
         assertEquals(9,stackTraceArray.length);
     }
 
     [Test]
     public function test_parseStackLine_should_return_a_StackLine_object_with_no_filename_and_lineNumber_when_stackTrace_line_doesnt_have_it():void
     {
-        var stackLine = _raygunAs.parseStackLine(_stackTraceLineWithConstructorMethod);
+        var stackLine = new StackLine(_stackTraceLineWithConstructorMethod);
 
         assertEquals("flash.display::BitmapData", stackLine.className);
         assertEquals("BitmapData()", stackLine.methodName);
@@ -158,7 +155,7 @@ public class RaygunTestCase
     [Test]
     public function test_parseStackLine_should_return_a_StackLine_object():void
     {
-        var stackLine = _raygunAs.parseStackLine(_stackTraceLineWithFileName);
+        var stackLine = new StackLine(_stackTraceLineWithFileName);
         assertEquals("com.xtdstudios.DMT.atlas::AtlasGenerator", stackLine.className);
         assertEquals("process()", stackLine.methodName);
         assertEquals(274, stackLine.lineNumber);
@@ -170,10 +167,9 @@ public class RaygunTestCase
     {
         var error:Error = new TypeError("Error #1009: Cannot access a property or method of a null object reference.");
         var errorDetails:ErrorDetails = new ErrorDetails(error);
-        assertEquals(22, errorDetails.stackTrace.length);
         assertEquals("Error #1009: Cannot access a property or method of a null object reference.", errorDetails.message);
         assertEquals("TypeError", errorDetails.className);
-
+        assertNotNull(errorDetails.stackTrace);
     }
 
     [Test]

@@ -52,17 +52,7 @@ public class RaygunAs implements IEventDispatcher
         return dispatcher.willTrigger(type);
     }
 
-    public function getFileLineNumber(exceptionLine:String):int
-    {
-        var numberIndex = exceptionLine.indexOf(".as:");
-        if(numberIndex <= 0)
-        {
-            return -1;
-        }
-        else  {
-            return parseInt(exceptionLine.slice(numberIndex+4, exceptionLine.length-1 ));
-        }
-        }
+
 
     public function getDeviceModel(os:String)
     {
@@ -116,67 +106,6 @@ public class RaygunAs implements IEventDispatcher
         DeviceData.osVersion = NativeDevicePropertiesData(NativeDeviceProperties.OS_VERSION ).value;
     }
 
-    public function getClassName( exceptionLine:String ):String
-    {
-      var classNameBeginIndex:int = 3;
-      var classNameEndIndex:int = exceptionLine.indexOf("/");
-      if(classNameEndIndex < 0)
-          classNameEndIndex = exceptionLine.indexOf("()");
 
-      return exceptionLine.slice(classNameBeginIndex, classNameEndIndex);
-
-    }
-
-    public function getFileName( exceptionLine:String ):String
-    {
-        var fileNameBeginIndex:int = exceptionLine.indexOf("[");
-        var fileNameEndIndex:int = exceptionLine.lastIndexOf(":");
-        if(fileNameBeginIndex >= 0){
-            return exceptionLine.slice(fileNameBeginIndex + 1, fileNameEndIndex);
-        }
-        else{
-            return "";
-        }
-    }
-
-    public function getMethodName( exceptionLine:String ):String
-    {
-        var className = getClassName(exceptionLine);
-        var methodNameBeginIndex:int = exceptionLine.indexOf(className ) + className.length;
-        if(exceptionLine.charAt(methodNameBeginIndex) == "/"){
-            methodNameBeginIndex++;
-        }
-        else if(exceptionLine.charAt(methodNameBeginIndex) == "("){
-            methodNameBeginIndex = exceptionLine.indexOf("::")+2;
-        }
-        var methodNameEndIndex:int = exceptionLine.indexOf("()");
-        return exceptionLine.slice(methodNameBeginIndex, methodNameEndIndex+2);
-    }
-
-    public function parseStackTrace( stackTrace:String ):Array
-    {
-        var stackTraceLines:Array = stackTrace.split("\n");
-        var stackLines:Array = new Array();
-
-        var indexOfAt=0;
-
-        for(var i:int=0; i<stackTraceLines.length; i++){
-            if(stackTraceLines[i].indexOf("at ") >= 0)
-            {
-                stackLines.push(stackTraceLines.parseStackLine);
-            }
-        }
-        return stackLines;
-    }
-
-    public function parseStackLine( stackTraceLine:String ):StackLine
-    {
-        var stackLine = new StackLine();
-        stackLine.className = getClassName(stackTraceLine);
-        stackLine.fileName = getFileName(stackTraceLine);
-        stackLine.lineNumber = getFileLineNumber(stackTraceLine);
-        stackLine.methodName = getMethodName(stackTraceLine);
-        return stackLine;
-    }
 }
 }
