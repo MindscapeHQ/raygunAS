@@ -28,7 +28,22 @@ import org.hamcrest.object.nullValue;
 
 public class RaygunTestCase
 {
-    private var raygunAs:RaygunAs;
+    private var _raygunAs:RaygunAs;
+
+    private var _fullStackTrace:String = "ArgumentError: Error #2015: Invalid BitmapData." +
+            "\nat flash.display::BitmapData/ctor()"+
+            "\nat flash.display::BitmapData()" +
+            "\nat com.xtdstudios.DMT.atlas::AtlasGenerator/generateBitmapData()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:159]" +
+            "\nat com.xtdstudios.DMT.atlas::AtlasGenerator/copyBitmaps()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:240]" +
+            "\nat com.xtdstudios.DMT.atlas::AtlasGenerator/process()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:274]" +
+            "\nat com.xtdstudios.common.threads::RunnablesList/process()[C:\Users\gil\Adobe Flash Builder 4.7\XTDCommon\src\com\xtdstudios\common\threads\RunnablesList.as:63]" +
+            "\nat com.xtdstudios.common.threads::BasePseudoThread/onTimer()[C:\Users\gil\Adobe Flash Builder 4.7\XTDCommon\src\com\xtdstudios\common\threads\BasePseudoThread.as:54]" +
+            "\nat flash.utils::Timer/_timerDispatch()" +
+            "\nat flash.utils::Timer/tick()";
+    private var _stackTraceLineWithFileName:String = "at com.xtdstudios.DMT.atlas::AtlasGenerator/process()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:274]";
+    private var _stackTraceLineWithoutFileName:String = "at flash.display::BitmapData/ctor()";
+    private var _stackTraceLineWithConstructorMethod:String = "at flash.display::BitmapData()";
+
 
     [Before(async, timeout=5000)]
     public function prepareMockolates():void
@@ -37,7 +52,7 @@ public class RaygunTestCase
                 prepare(UncaughtErrorEvent, Error),
                 Event.COMPLETE);
 
-        raygunAs = new RaygunAs();
+        _raygunAs = new RaygunAs();
     }
 
     [Test]
@@ -50,93 +65,67 @@ public class RaygunTestCase
     [Test]
     public function test_getFileLineNumber_should_return_line_number_from_stacktrace():void
     {
-        var error:Error = nice(Error);
-        stub(error).method("getStackTrace" ).returns("ArgumentError: Error #2015: Invalid BitmapData." +
-        "\nat flash.display::BitmapData/ctor()"+
-        "\nat flash.display::BitmapData()" +
-        "\nat com.xtdstudios.DMT.atlas::AtlasGenerator/generateBitmapData()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:159]" +
-        "\nat com.xtdstudios.DMT.atlas::AtlasGenerator/copyBitmaps()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:240]" +
-        "\nat com.xtdstudios.DMT.atlas::AtlasGenerator/process()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:274]" +
-        "\nat com.xtdstudios.common.threads::RunnablesList/process()[C:\Users\gil\Adobe Flash Builder 4.7\XTDCommon\src\com\xtdstudios\common\threads\RunnablesList.as:63]" +
-        "\nat com.xtdstudios.common.threads::BasePseudoThread/onTimer()[C:\Users\gil\Adobe Flash Builder 4.7\XTDCommon\src\com\xtdstudios\common\threads\BasePseudoThread.as:54]" +
-        "\nat flash.utils::Timer/_timerDispatch()" +
-        "\nat flash.utils::Timer/tick()");
-
-
-        var exceptionLine:String = "at com.xtdstudios.DMT.atlas::AtlasGenerator/process()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:274]";
-        var number:int = raygunAs.getFileLineNumber(exceptionLine);
-        assertEquals("274", number);
-
-        exceptionLine = "at com.xtdstudios.common.threads::BasePseudoThread/onTimer()[C:\Users\gil\Adobe Flash Builder 4.7\XTDCommon\src\com\xtdstudios\common\threads\BasePseudoThread.as:54]";
-        number = raygunAs.getFileLineNumber(exceptionLine);
-        assertEquals(54, number);
-
+        var number:int = _raygunAs.getFileLineNumber(_stackTraceLineWithFileName);
+        assertEquals(274, number);
     }
 
     [Test]
     public function test_getFileLineNumber_should_return_minus_1_when_there_is_no_line_number():void
     {
-
-        var exceptionLine:String = "at flash.utils::Timer/_timerDispatch()";
-        var number:int = raygunAs.getFileLineNumber(exceptionLine);
+        var number:int = _raygunAs.getFileLineNumber(_stackTraceLineWithoutFileName);
         assertEquals(-1, number);
     }
 
     [Test]
     public function test_getClassName_should_return_a_class_name_from_stacktrace():void
     {
-        var exceptionLine:String = "at com.xtdstudios.DMT.atlas::AtlasGenerator/process()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:274]";
-        var className:String = raygunAs.getClassName(exceptionLine);
+        var className:String = _raygunAs.getClassName(_stackTraceLineWithFileName);
         assertEquals("com.xtdstudios.DMT.atlas::AtlasGenerator", className);
 
-        exceptionLine = "at flash.display::BitmapData()";
-        className = raygunAs.getClassName(exceptionLine);
+        className = _raygunAs.getClassName(_stackTraceLineWithConstructorMethod);
         assertEquals("flash.display::BitmapData", className);
     }
 
     [Test]
     public function test_getFileName_should_return_a_file_name_from_stacktrace():void
     {
-        var exceptionLine:String = "at com.xtdstudios.DMT.atlas::AtlasGenerator/process()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:274]";
-        var fileName:String = raygunAs.getFileName(exceptionLine);
+        var fileName:String = _raygunAs.getFileName(_stackTraceLineWithFileName);
         assertEquals("C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as", fileName);
     }
 
     [Test]
     public function test_getFileName_should_return_an_empty_string_if_there_is_no_file_name_in_stacktrace():void
     {
-        var exceptionLine:String = "at flash.display::BitmapData()";
-        var fileName:String = raygunAs.getFileName(exceptionLine);
+        var fileName:String = _raygunAs.getFileName(_stackTraceLineWithoutFileName);
         assertEquals("", fileName);
     }
 
     [Test]
     public function test_getMethodName_should_return_a_method_name_from_stacktrace():void
     {
-        var exceptionLine:String = "at com.xtdstudios.DMT.atlas::AtlasGenerator/process()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:274]";
-        var methodName:String = raygunAs.getMethodName(exceptionLine);
+        var methodName:String = _raygunAs.getMethodName(_stackTraceLineWithFileName);
         assertEquals("process()", methodName);
     }
 
     [Test]
     public function test_getMethodName_should_return_constructor_name_from_stacktrace_when_method_is_a_constructor():void
     {
-        var exceptionLine:String = "at flash.display::BitmapData()";
-        var methodName:String = raygunAs.getMethodName(exceptionLine);
+        var methodName:String = _raygunAs.getMethodName(_stackTraceLineWithConstructorMethod);
         assertEquals("BitmapData()", methodName);
     }
+
+    private var _osWithIOS:String = "iPhone OS 7.1 iPhone4,1";
 
     [Test(async, timeout=1000)]
     public function test_getDeviceModel_should_return_iPhone_for_iOS_device():void
     {
-        var os:String = "iPhone OS 7.1 iPhone4,1";
         var check:Function = function(e:Event,... args):void
         {
             assertEquals("iPhone4,1", DeviceData.deviceModel);
             trace("DEVICE MODEL", DeviceData.deviceModel);
         }
-        Async.handleEvent(this, raygunAs, RaygunAs.DEVICE_DATA_READY, check, 1000);
-        raygunAs.getDeviceModel(os);
+        Async.handleEvent(this, _raygunAs, RaygunAs.DEVICE_DATA_READY, check, 1000);
+        _raygunAs.getDeviceModel(_osWithIOS);
     }
 
     [Test(async, timeout=1000)]
@@ -148,37 +137,24 @@ public class RaygunTestCase
             assertEquals("iPhone OS 7.1", DeviceData.osVersion);
             trace("OS Version", DeviceData.osVersion);
         }
-        Async.handleEvent(this, raygunAs, RaygunAs.DEVICE_DATA_READY, check, 1000);
-        raygunAs.getOSVersion(os);
+        Async.handleEvent(this, _raygunAs, RaygunAs.DEVICE_DATA_READY, check, 1000);
+        _raygunAs.getOSVersion(_osWithIOS);
     }
 
     [Test]
     public function test_parseStackTrace_should_return_array_of_StackLine_objects():void
     {
-        var stackTrace:String = "ArgumentError: Error #2015: Invalid BitmapData." +
-                "\nat flash.display::BitmapData/ctor()"+
-                "\nat flash.display::BitmapData()" +
-                "\nat com.xtdstudios.DMT.atlas::AtlasGenerator/generateBitmapData()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:159]" +
-                "\nat com.xtdstudios.DMT.atlas::AtlasGenerator/copyBitmaps()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:240]" +
-                "\nat com.xtdstudios.DMT.atlas::AtlasGenerator/process()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:274]" +
-                "\nat com.xtdstudios.common.threads::RunnablesList/process()[C:\Users\gil\Adobe Flash Builder 4.7\XTDCommon\src\com\xtdstudios\common\threads\RunnablesList.as:63]" +
-                "\nat com.xtdstudios.common.threads::BasePseudoThread/onTimer()[C:\Users\gil\Adobe Flash Builder 4.7\XTDCommon\src\com\xtdstudios\common\threads\BasePseudoThread.as:54]" +
-                "\nat flash.utils::Timer/_timerDispatch()" +
-                "\nat flash.utils::Timer/tick()";
-
-        var stackTraceArray:Array = raygunAs.parseStackTrace(stackTrace);
+        var stackTraceArray:Array = _raygunAs.parseStackTrace(_fullStackTrace);
         assertEquals(9,stackTraceArray.length);
-
     }
 
     [Test]
     public function test_parseStackLine_should_return_a_StackLine_object_with_no_filename_and_lineNumber_when_stackTrace_line_doesnt_have_it():void
     {
-        var stackTraceLine = "at flash.display::BitmapData/ctor()";
-        var stackLine = raygunAs.parseStackLine(stackTraceLine);
+        var stackLine = _raygunAs.parseStackLine(_stackTraceLineWithConstructorMethod);
 
         assertEquals("flash.display::BitmapData", stackLine.className);
-        assertEquals("ctor()", stackLine.methodName);
+        assertEquals("BitmapData()", stackLine.methodName);
         assertEquals(-1, stackLine.lineNumber);
         assertEquals("", stackLine.fileName);
     }
@@ -186,11 +162,10 @@ public class RaygunTestCase
     [Test]
     public function test_parseStackLine_should_return_a_StackLine_object():void
     {
-        var stackTraceLine = "at com.xtdstudios.DMT.atlas::AtlasGenerator/generateBitmapData()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:159]";
-        var stackLine = raygunAs.parseStackLine(stackTraceLine);
+        var stackLine = _raygunAs.parseStackLine(_stackTraceLineWithFileName);
         assertEquals("com.xtdstudios.DMT.atlas::AtlasGenerator", stackLine.className);
-        assertEquals("generateBitmapData()", stackLine.methodName);
-        assertEquals(159, stackLine.lineNumber);
+        assertEquals("process()", stackLine.methodName);
+        assertEquals(274, stackLine.lineNumber);
         assertEquals("C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as", stackLine.fileName);
 
     }
