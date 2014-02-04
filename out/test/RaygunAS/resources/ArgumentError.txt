@@ -1,0 +1,42 @@
+ArgumentError: Error #2015: Invalid BitmapData.
+	at flash.display::BitmapData/ctor()
+	at flash.display::BitmapData()
+	at com.xtdstudios.DMT.atlas::AtlasGenerator/generateBitmapData()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:159]
+	at com.xtdstudios.DMT.atlas::AtlasGenerator/copyBitmaps()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:240]
+	at com.xtdstudios.DMT.atlas::AtlasGenerator/process()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:274]
+	at com.xtdstudios.common.threads::RunnablesList/process()[C:\Users\gil\Adobe Flash Builder 4.7\XTDCommon\src\com\xtdstudios\common\threads\RunnablesList.as:63]
+	at com.xtdstudios.common.threads::BasePseudoThread/onTimer()[C:\Users\gil\Adobe Flash Builder 4.7\XTDCommon\src\com\xtdstudios\common\threads\BasePseudoThread.as:54]
+	at flash.utils::Timer/_timerDispatch()
+	at flash.utils::Timer/tick()
+
+
+	message:"Error #2015: Invalid BitmapData."
+	name:"ArgumentError"
+	errorId:2015 (0x7df)
+
+at com.xtdstudios.DMT.atlas::AtlasGenerator/process()[C:UsersgilAdobe Flash Builder 4.7DMTDMTsrccomxtdstudiosDMTatlasAtlasGenerator.as:274]
+
+
+Android KitKat Capabilities.os
+Linux 3.4.0-gadb2201
+
+iPh0n
+iPhone OS 7.1 iPhone4,1
+
+
+Another stacktrace!
+
+TypeError: Error #1034: Type Coercion failed: cannot convert com.mands.knowledgetoshare.view.components::ProgressView@4daf10e1 to flash.display.DisplayObject.
+	at com.mands.knowledgetoshare.view::ProgressViewMediator/onRegister()[/Users/zan/Dev/KnowledgeToShareApp/app/air/src/com/mands/knowledgetoshare/view/ProgressViewMediator.as:25]
+	at org.puremvc.as3.core::View/registerMediator()[C:\Documents and Settings\Owner.CapricornOne\My Documents\My Workspaces\PureMVC\PureMVC_AS3\src\org\puremvc\as3\core\View.as:201]
+	at org.puremvc.as3.patterns.facade::Facade/registerMediator()[C:\Documents and Settings\Owner.CapricornOne\My Documents\My Workspaces\PureMVC\PureMVC_AS3\src\org\puremvc\as3\patterns\facade\Facade.as:337]
+	at com.mands.knowledgetoshare.view::ApplicationMediator/onStarlingRootCreated()[/Users/zan/Dev/KnowledgeToShareApp/app/air/src/com/mands/knowledgetoshare/view/ApplicationMediator.as:127]
+	at starling.events::EventDispatcher/invokeEvent()[/Users/redge/Dropbox/Development/starling/starling/src/starling/events/EventDispatcher.as:141]
+	at starling.events::EventDispatcher/dispatchEvent()[/Users/redge/Dropbox/Development/starling/starling/src/starling/events/EventDispatcher.as:112]
+	at starling.events::EventDispatcher/dispatchEventWith()[/Users/redge/Dropbox/Development/starling/starling/src/starling/events/EventDispatcher.as:190]
+	at starling.core::Starling/initializeRoot()[/Users/redge/Dropbox/Development/starling/starling/src/starling/core/Starling.as:357]
+	at starling.core::Starling/initialize()[/Users/redge/Dropbox/Development/starling/starling/src/starling/core/Starling.as:329]
+	at starling.core::Starling/onContextCreated()[/Users/redge/Dropbox/Development/starling/starling/src/starling/core/Starling.as:557]
+
+
+
