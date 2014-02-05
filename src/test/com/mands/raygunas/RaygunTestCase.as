@@ -4,6 +4,7 @@
 package com.mands.raygunas
 {
 
+import com.mands.raygunas.raygunrequest.DeviceData;
 import com.mands.raygunas.raygunrequest.Environment;
 import com.mands.raygunas.raygunrequest.ErrorDetails;
 import com.mands.raygunas.raygunrequest.StackLine;
@@ -35,7 +36,7 @@ public class RaygunTestCase
 
 
     [Before(async, timeout=5000)]
-    public function prepareMockolates():void
+    public function init():void
     {
         _raygunAs = new RaygunAS();
     }
@@ -94,17 +95,18 @@ public class RaygunTestCase
 
 
     [Test(async, timeout=1000)]
-    public function test_getDeviceData_should_return_iPhone_and_iOS_version_for_iOS_device():void
+    public function test_getDeviceData_should_load_iPhone_and_iOS_version_for_iOS_device():void
     {
-        var environment:Environment = new Environment(null);;
+
+        var deviceData:DeviceData = new DeviceData();
         var check:Function = function(e:Event,... args):void
         {
-            assertEquals("iPhone4,1", environment.deviceName);
-            assertEquals("iPhone OS 7.1", environment.osVersion);
+            assertEquals("iPhone4,1", deviceData.deviceName);
+            assertEquals("iPhone OS 7.1", deviceData.osVersion);
         }
-        Async.handleEvent(this, environment, Environment.DEVICE_DATA_READY, check, 1000);
+        Async.handleEvent(this, deviceData, DeviceData.DEVICE_DATA_READY, check, 1000);
 
-        environment.loadDeviceData(_osWithIOS);
+        deviceData.loadDeviceData(_osWithIOS);
     }
 
 
@@ -159,8 +161,7 @@ public class RaygunTestCase
         var error:Error = new TypeError("Error #1009: Cannot access a property or method of a null object reference.");
 
         Async.proceedOnEvent(this, _raygunAs, RaygunAS.RAYGUN_COMPLETE, 10000);
-        _raygunAs.performRequest("0.01", error, _osWithIOS, null);
-
+        _raygunAs.performRequest("0.01", error, null);
     }
 
 
