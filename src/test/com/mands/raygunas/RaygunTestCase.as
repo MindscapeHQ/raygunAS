@@ -15,7 +15,7 @@ import org.flexunit.async.Async;
 
 public class RaygunTestCase
 {
-    private var _raygunAs:RaygunAs;
+    private var _raygunAs:RaygunAS;
 
     private var _fullStackTrace:String = "ArgumentError: Error #2015: Invalid BitmapData." +
             "\nat flash.display::BitmapData/ctor()"+
@@ -30,12 +30,14 @@ public class RaygunTestCase
     private var _stackTraceLineWithFileName:String = "at com.xtdstudios.DMT.atlas::AtlasGenerator/process()[C:\Users\gil\Adobe Flash Builder 4.7\DMT\DMT\src\com\xtdstudios\DMT\atlas\AtlasGenerator.as:274]";
     private var _stackTraceLineWithoutFileName:String = "at flash.display::BitmapData/ctor()";
     private var _stackTraceLineWithConstructorMethod:String = "at flash.display::BitmapData()";
+    private var _osWithIOS:String = "iPhone OS 7.1 iPhone4,1";
+
 
 
     [Before(async, timeout=5000)]
     public function prepareMockolates():void
     {
-        _raygunAs = new RaygunAs();
+        _raygunAs = new RaygunAS();
     }
 
     [Test]
@@ -90,7 +92,6 @@ public class RaygunTestCase
         assertEquals("BitmapData()", methodName);
     }
 
-    private var _osWithIOS:String = "iPhone OS 7.1 iPhone4,1";
 
     [Test(async, timeout=1000)]
     public function test_getDeviceData_should_return_iPhone_and_iOS_version_for_iOS_device():void
@@ -151,6 +152,18 @@ public class RaygunTestCase
         var errorClass:String = ErrorDetails.parseErrorClass(_fullStackTrace);
         assertEquals("ArgumentError", errorClass);
     }
+
+    [Test(async, timeout=10000)]
+    public function testPerformRequest()
+    {
+        var error:Error = new TypeError("Error #1009: Cannot access a property or method of a null object reference.");
+
+        Async.proceedOnEvent(this, _raygunAs, RaygunAS.RAYGUN_COMPLETE, 10000);
+        _raygunAs.performRequest("0.01", error, _osWithIOS, null);
+
+    }
+
+
 
 }
 }

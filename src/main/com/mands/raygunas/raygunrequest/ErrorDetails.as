@@ -33,7 +33,7 @@ public class ErrorDetails
         for(var i:int=0; i<stackTraceLines.length; i++){
             if(stackTraceLines[i].indexOf("at ") >= 0)
             {
-                stackLines.push(stackTraceLines.parseStackLine);
+                stackLines.push(new StackLine(stackTraceLines[i]));
             }
         }
         return stackLines;

@@ -37,7 +37,7 @@ public class Environment  implements IEventDispatcher
         }
     }
 
-    public function getDeviceData(os:String){
+    public function getDeviceData(os:String, callback:Function = null){
 
         var deviceLineNumber:int = os.lastIndexOf("iPhone");
         if(deviceLineNumber < 0) deviceLineNumber = os.lastIndexOf("iPad");
@@ -48,6 +48,10 @@ public class Environment  implements IEventDispatcher
             osVersion = os.substring(0, deviceLineNumber -1);
 
             dispatchEvent(new Event(DEVICE_DATA_READY ));
+            if(callback != null)
+            {
+                callback.call();
+            }
         }
         else{
             //check for Android

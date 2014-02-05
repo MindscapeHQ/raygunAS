@@ -18,6 +18,7 @@ public class RaygunRequest
     {
         details = new Details(version, error, os, mainStage);
 
+
         var dateUtil:ISO8601Util = new ISO8601Util();
         occurredOn = dateUtil.formatExtendedDateTime(new Date());
     }
