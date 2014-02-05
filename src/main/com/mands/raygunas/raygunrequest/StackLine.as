@@ -45,7 +45,7 @@ public class StackLine
     public static function getMethodName( exceptionLine:String ):String
     {
         var className:String = getClassName(exceptionLine);
-        var methodNameBeginIndex:int = exceptionLine.indexOf(className ) + className.length;
+        var methodNameBeginIndex:int = exceptionLine.indexOf(className) + className.length;
         if(exceptionLine.charAt(methodNameBeginIndex) == "/"){
             methodNameBeginIndex++;
         }
@@ -58,13 +58,16 @@ public class StackLine
 
     public static function getFileLineNumber(exceptionLine:String):int
     {
-        var numberIndex:int = exceptionLine.indexOf(".as:");
-        if(numberIndex <= 0)
+        var fileExtension:String = ".as:";
+        var extensionPos:int = exceptionLine.indexOf(fileExtension);
+        var lineStart:int = extensionPos+fileExtension.length;
+        var lineEnd:int = exceptionLine.length-1;
+        if(extensionPos <= 0)
         {
             return -1;
         }
         else  {
-            return parseInt(exceptionLine.slice(numberIndex+4, exceptionLine.length-1 ));
+            return parseInt(exceptionLine.slice(lineStart,lineEnd));
         }
     }
 

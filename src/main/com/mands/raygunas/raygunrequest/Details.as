@@ -17,7 +17,6 @@ public class Details
         this.version = version;
         this.error = new ErrorDetails(error);
         this.environment = new Environment(mainStage, deviceName, osVersion);
-
     }
 
 }

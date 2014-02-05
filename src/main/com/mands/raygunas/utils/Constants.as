@@ -5,9 +5,9 @@ package com.mands.raygunas.utils
 {
 public class Constants
 {
-    //replace this with your api key
-    public static const RAYGUN_APIKEY:String = "INSERT_API_KEY_HERE";
     public static const RAYGUN_APIKEY_HEADER:String = "X-ApiKey";
     public static const RAYGUN_ADDRESS:String = "https://api.raygun.io/entries";
+
+    public static const TEST_API_KEY:String = "REPLACE_WITH_YOUR_API_KEY"
 }
 }

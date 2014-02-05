@@ -5,9 +5,9 @@ package com.mands.raygunas
 {
 
 import com.mands.raygunas.raygunrequest.DeviceData;
-import com.mands.raygunas.raygunrequest.Environment;
 import com.mands.raygunas.raygunrequest.ErrorDetails;
 import com.mands.raygunas.raygunrequest.StackLine;
+import com.mands.raygunas.utils.Constants;
 
 import flash.events.Event;
 import org.flexunit.asserts.assertEquals;
@@ -34,11 +34,12 @@ public class RaygunTestCase
     private var _osWithIOS:String = "iPhone OS 7.1 iPhone4,1";
 
 
-
     [Before(async, timeout=5000)]
     public function init():void
     {
-        _raygunAs = new RaygunAS();
+        _raygunAs = new RaygunAS(null, Constants.TEST_API_KEY, null);
+        Async.proceedOnEvent(this, _raygunAs, RaygunAS.READY_TO_ZAP, 1000);
+        _raygunAs.chargeRaygun();
     }
 
     [Test]
@@ -163,8 +164,5 @@ public class RaygunTestCase
         Async.proceedOnEvent(this, _raygunAs, RaygunAS.RAYGUN_COMPLETE, 10000);
         _raygunAs.performRequest("0.01", error, null);
     }
-
-
-
 }
 }
