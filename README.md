@@ -1,7 +1,26 @@
-RaygunAS
+RaygunAS - Raygun Client for Adobe Air projects
 ========
 
+Usage
 --------
+Initialize Raygun in your main Stage instance:
+
+```
+_raygunAs = new RaygunAS(this,RAYGUN_API_KEY, APP_VERSION);
+        _raygunAs.addEventListener(RaygunAS.READY_TO_ZAP, onRaygunReady);
+        _raygunAs.chargeRaygun();
+    }
+
+    private function onRaygunReady( event:Event ):void
+    {
+        //do logic here
+    }
+    
+```
+
+... and you're done!
+
+
 
 <br />
 
