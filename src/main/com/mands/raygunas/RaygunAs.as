@@ -24,11 +24,11 @@ public class RaygunAS extends EventDispatcher
     private var _urlLoader:URLLoader;
     private var _urlRequest:URLRequest;
 
-    public function performRequest(version:String, error:Error, os:String, mainStage:Stage = null)
+    public function performRequest(version:String, error:Error, os:String, mainStage:Stage = null):void
     {
         _raygunRequest = new RaygunRequest(version, error, os, mainStage);
         _raygunRequest.details.environment.addEventListener(Environment.DEVICE_DATA_READY, onEnvironmentVariablesPrepared);
-        _raygunRequest.details.environment.getDeviceData(os);
+        _raygunRequest.details.environment.loadDeviceData(os);
     }
 
     private function onEnvironmentVariablesPrepared( event:Event ):void

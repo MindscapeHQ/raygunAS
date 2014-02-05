@@ -28,8 +28,6 @@ public class ErrorDetails
         var stackTraceLines:Array = stackTrace.split("\n");
         var stackLines:Array = new Array();
 
-        var indexOfAt=0;
-
         for(var i:int=0; i<stackTraceLines.length; i++){
             if(stackTraceLines[i].indexOf("at ") >= 0)
             {

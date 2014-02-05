@@ -37,7 +37,7 @@ public class Environment  implements IEventDispatcher
         }
     }
 
-    public function getDeviceData(os:String, callback:Function = null){
+    public function loadDeviceData(os:String, callback:Function = null):void{
 
         var deviceLineNumber:int = os.lastIndexOf("iPhone");
         if(deviceLineNumber < 0) deviceLineNumber = os.lastIndexOf("iPad");

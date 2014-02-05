@@ -104,7 +104,7 @@ public class RaygunTestCase
         }
         Async.handleEvent(this, environment, Environment.DEVICE_DATA_READY, check, 1000);
 
-        environment.getDeviceData(_osWithIOS);
+        environment.loadDeviceData(_osWithIOS);
     }
 
 

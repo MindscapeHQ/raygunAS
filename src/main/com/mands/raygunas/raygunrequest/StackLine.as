@@ -44,7 +44,7 @@ public class StackLine
 
     public static function getMethodName( exceptionLine:String ):String
     {
-        var className = getClassName(exceptionLine);
+        var className:String = getClassName(exceptionLine);
         var methodNameBeginIndex:int = exceptionLine.indexOf(className ) + className.length;
         if(exceptionLine.charAt(methodNameBeginIndex) == "/"){
             methodNameBeginIndex++;
@@ -58,7 +58,7 @@ public class StackLine
 
     public static function getFileLineNumber(exceptionLine:String):int
     {
-        var numberIndex = exceptionLine.indexOf(".as:");
+        var numberIndex:int = exceptionLine.indexOf(".as:");
         if(numberIndex <= 0)
         {
             return -1;
