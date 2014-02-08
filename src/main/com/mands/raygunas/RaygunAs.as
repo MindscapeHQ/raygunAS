@@ -20,7 +20,7 @@ import flash.net.URLRequestHeader;
 import flash.net.URLRequestMethod;
 import flash.system.Capabilities;
 
-public class RaygunAS extends EventDispatcher
+public class RaygunAs extends EventDispatcher
 {
     public static const NAME:String = "RaygunAS"
     public static const RAYGUN_COMPLETE:String = NAME+"RaygunComplete";
@@ -34,7 +34,7 @@ public class RaygunAS extends EventDispatcher
     private var _appVersion:String;
     private var _deviceData:DeviceData;
 
-    public function RaygunAS(mainSprite:Sprite = null, apiKey:String = null, appVersion:String = null)
+    public function RaygunAs(mainSprite:Sprite = null, apiKey:String = null, appVersion:String = null)
     {
         _mainSprite = mainSprite;
         _apiKey = apiKey;

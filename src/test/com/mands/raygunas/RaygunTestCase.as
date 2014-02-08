@@ -16,7 +16,7 @@ import org.flexunit.async.Async;
 
 public class RaygunTestCase
 {
-    private var _raygunAs:RaygunAS;
+    private var _raygunAs:RaygunAs;
 
     private var _fullStackTrace:String = "ArgumentError: Error #2015: Invalid BitmapData." +
             "\nat flash.display::BitmapData/ctor()"+
@@ -37,8 +37,8 @@ public class RaygunTestCase
     [Before(async, timeout=5000)]
     public function init():void
     {
-        _raygunAs = new RaygunAS(null, Constants.TEST_API_KEY, null);
-        Async.proceedOnEvent(this, _raygunAs, RaygunAS.READY_TO_ZAP, 1000);
+        _raygunAs = new RaygunAs(null, Constants.TEST_API_KEY, null);
+        Async.proceedOnEvent(this, _raygunAs, RaygunAs.READY_TO_ZAP, 1000);
         _raygunAs.chargeRaygun();
     }
 
@@ -161,7 +161,7 @@ public class RaygunTestCase
     {
         var error:Error = new TypeError("Error #1009: Cannot access a property or method of a null object reference.");
 
-        Async.proceedOnEvent(this, _raygunAs, RaygunAS.RAYGUN_COMPLETE, 10000);
+        Async.proceedOnEvent(this, _raygunAs, RaygunAs.RAYGUN_COMPLETE, 10000);
         _raygunAs.performRequest("0.01", error, null);
     }
 }
