@@ -20,6 +20,7 @@ _raygunAs = new RaygunAS(this,RAYGUN_API_KEY, APP_VERSION);
 
 ... and you're done!
 
+[Blogpost with more detailed usage](http://www.spacecowboyrocketcompany.com/blog/2014/02/08/raygunas-crash-reporting-for-adobe-air-apps/)
 
 
 <br />
@@ -29,4 +30,6 @@ Use of this source code is governed by a BSD-style license that can be found in 
 
 Zan Markan<br />
 zan.markan@marks-and-spencer.com<br />
+
+
 <br />
