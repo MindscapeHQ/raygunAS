@@ -20,7 +20,7 @@ _raygunAs = new RaygunAS(this,RAYGUN_API_KEY, APP_VERSION);
 
 ... and you're done!
 
-[Blogpost with more detailed usage](http://www.spacecowboyrocketcompany.com/blog/2014/02/08/raygunas-crash-reporting-for-adobe-air-apps/)
+[Blogpost with more detailed usage](https://markan.me/raygunas-crash-reporting-for-adobe-air-apps/)
 
 
 <br />
